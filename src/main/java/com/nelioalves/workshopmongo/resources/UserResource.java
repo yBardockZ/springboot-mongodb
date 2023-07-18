@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.nelioalves.workshopmongo.domain.Post;
 import com.nelioalves.workshopmongo.domain.User;
 import com.nelioalves.workshopmongo.dto.UserDTO;
 import com.nelioalves.workshopmongo.services.UserService;
@@ -36,6 +37,7 @@ public class UserResource {
 		}
 		
 		return ResponseEntity.ok().body(listDTO);
+		
 	}
 
 	@GetMapping(value="/{id}")
@@ -44,6 +46,7 @@ public class UserResource {
 		UserDTO userDTO = new UserDTO(user);
 		
 		return ResponseEntity.ok().body(userDTO);
+		
 	}
 	
 	@PostMapping
@@ -52,12 +55,14 @@ public class UserResource {
 		service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
+		
 	}
 	
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<Void> delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
+		
 	}
 	
 	@PutMapping(value="/{id}")
@@ -66,6 +71,14 @@ public class UserResource {
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
+		
+	}
+	
+	@GetMapping(value="/{id}/posts")
+	public ResponseEntity<List<Post>> findBPosts(@PathVariable String id) {
+		User user = service.findById(id);
+		return ResponseEntity.ok().body(user.getPosts());
+		
 	}
 	
 
